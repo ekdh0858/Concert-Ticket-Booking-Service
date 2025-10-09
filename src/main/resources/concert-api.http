@@ -1,0 +1,15 @@
+### 🎵 콘서트 생성
+POST http://localhost:8080/api/concerts
+Content-Type: application/json
+
+{
+  "title": "2025 클래식 오케스트라",
+  "description": "부산시립교향악단이 선보이는 웅장한 클래식 무대",
+  "director": "김태현"
+}
+
+> {% client.global.set("concertId", response.body.id) %}
+
+### 🎫 콘서트 단일 조회
+GET http://localhost:8080/api/concerts/{{concertId}}
+Content-Type: application/json
