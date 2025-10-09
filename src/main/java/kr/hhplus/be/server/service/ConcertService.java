@@ -12,14 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class ConcertService {
+
     private final ConcertRepository concertRepository;
 
     @Transactional
     public ConcertResponseDto createConcert(ConcertCreateRequestDto dto) {
         Concert concert = Concert.builder()
-            .title(dto.getTitle())
-            .description(dto.getDescription())
-            .director(dto.getDirector())
+            .title(dto.title())
+            .description(dto.description())
+            .director(dto.director())
             .build();
 
         Concert saved = concertRepository.save(concert);

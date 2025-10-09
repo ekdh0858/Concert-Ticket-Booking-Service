@@ -35,9 +35,9 @@ class ConcertServiceTest {
 
         Concert mockConcert = Concert.builder()
             .id(UUID.randomUUID())
-            .title(dto.getTitle())
-            .description(dto.getDescription())
-            .director(dto.getDirector())
+            .title(dto.title())
+            .description(dto.description())
+            .director(dto.director())
             .build();
 
         when(concertRepository.save(any(Concert.class))).thenReturn(mockConcert);
@@ -47,9 +47,9 @@ class ConcertServiceTest {
 
         // then
         verify(concertRepository, times(1)).save(any(Concert.class));
-        assertThat(response.title()).isEqualTo(dto.getTitle());
-        assertThat(response.description()).isEqualTo(dto.getDescription());
-        assertThat(response.director()).isEqualTo(dto.getDirector());
+        assertThat(response.title()).isEqualTo(dto.title());
+        assertThat(response.description()).isEqualTo(dto.description());
+        assertThat(response.director()).isEqualTo(dto.director());
         assertThat(response.id()).isNotNull();
     }
 

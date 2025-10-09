@@ -5,7 +5,11 @@ import kr.hhplus.be.server.entity.Concert;
 import lombok.Builder;
 
 @Builder
-public record ConcertResponseDto(UUID id, String title, String description, String director) {
+public record ConcertResponseDto(
+    UUID id,
+    String title,
+    String description,
+    String director) {
 
     public static ConcertResponseDto fromEntity(Concert concert) {
         return ConcertResponseDto.builder()

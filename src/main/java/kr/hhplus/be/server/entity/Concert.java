@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Concert {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
