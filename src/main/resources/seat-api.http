@@ -1,0 +1,18 @@
+### 🎵 공연 스케줄 생성 (좌석 1~50 자동 생성)
+POST http://localhost:8080/api/schedules
+Content-Type: application/json
+
+{
+  "title": "2차 공연",
+  "startTime": "2025-10-25T19:00:00",
+  "endTime": "2025-10-25T21:00:00",
+  "concertId": "{{concertId}}"
+}
+
+> {% client.global.set("scheduleId", response.body.id) %}
+
+###
+
+### 🎫 예약 가능한 좌석 조회 (AVAILABLE 상태만)
+GET http://localhost:8080/api/seats/available?scheduleId={{scheduleId}}
+Content-Type: application/json
