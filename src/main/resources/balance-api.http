@@ -1,0 +1,14 @@
+### 💰 잔액 충전
+POST http://localhost:8080/api/balance/charge
+Content-Type: application/json
+
+{
+  "userId": "8f8f63b2-2532-4b08-948b-4bfb3cc1a221",
+  "amount": 5000
+}
+
+###
+
+### 💵 잔액 조회
+GET http://localhost:8080/api/balance/b7b77f2f-5f40-4a59-8c1d-ccdb61e6766d
+Accept: application/json
