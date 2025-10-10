@@ -1,0 +1,11 @@
+### 🎟️ 좌석 예약 요청 (AVAILABLE 좌석 → RESERVED/PENDING 상태 전환)
+POST http://localhost:8080/api/reservations
+Content-Type: application/json
+
+{
+  "seatId": "{{seatId}}",
+  "userId": "8f8f63b2-2532-4b08-948b-4bfb3cc1a221"
+}
+
+> {% client.global.set("reservationId", response.body.reservationId)
+client.global.set("seatId", response.body.seatId) %}

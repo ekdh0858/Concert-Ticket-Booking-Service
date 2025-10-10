@@ -16,3 +16,14 @@ Content-Type: application/json
 ### 🎫 예약 가능한 좌석 조회 (AVAILABLE 상태만)
 GET http://localhost:8080/api/seats/available?scheduleId={{scheduleId}}
 Content-Type: application/json
+
+> {%
+  // 좌석 목록 중 첫 번째 좌석의 seatId를 전역 변수로 저장
+  const firstSeat = response.body[0];
+  if (firstSeat) {
+    client.global.set("seatId", firstSeat.id);
+    console.log("✅ 저장된 seatId:", firstSeat.id);
+  } else {
+    console.log("⚠️ 예약 가능한 좌석이 없습니다.");
+  }
+%}
