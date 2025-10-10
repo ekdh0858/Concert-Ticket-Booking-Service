@@ -16,6 +16,19 @@ public class BalanceService {
     private final BalanceRepository balanceRepository;
 
     @Transactional
+    public void deduct(UUID userId, Long amount) {
+        UserBalance balance = balanceRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        if (balance.getBalance() < amount) {
+            throw new IllegalStateException("잔액이 부족합니다.");
+        }
+
+        balance.charge(-amount); // 음수 금액을 더해서 차감
+        balanceRepository.save(balance);
+    }
+
+    @Transactional
     public BalanceResponseDto charge(BalanceChargeRequestDto dto) {
         UserBalance balance = balanceRepository.findById(dto.userId())
             .orElseGet(() -> UserBalance.builder()

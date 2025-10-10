@@ -49,4 +49,16 @@ public class ReservationEntity {
         CONFIRMED,
         CANCELLED
     }
+
+    public void updateStatus(ReservationStatus newStatus) {
+        this.status = newStatus;
+    }
+
+    public boolean isExpired() {
+        return LocalDateTime.now().isAfter(expiresAt);
+    }
+
+    public void cancel() {
+        this.status = ReservationStatus.CANCELLED;
+    }
 }

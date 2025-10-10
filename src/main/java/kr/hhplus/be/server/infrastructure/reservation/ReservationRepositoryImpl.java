@@ -27,4 +27,12 @@ public class ReservationRepositoryImpl implements ReservationRepositoryPort {
         return jpaRepository.findBySeatId(seatId)
             .map(ReservationMapper::toDomain);
     }
+
+    @Override
+    public void markAsPaid(UUID reservationId) {
+        ReservationEntity reservation = jpaRepository.findById(reservationId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
+
+        reservation.updateStatus(ReservationEntity.ReservationStatus.CONFIRMED);
+    }
 }
