@@ -34,7 +34,7 @@ class ReserveSeatUseCaseTest {
     @InjectMocks
     private ReserveSeatUseCase reserveSeatUseCase;
 
-    private ConcertSchedule concertSchedule; // ✅ 모든 테스트에서 공통으로 사용할 일정 객체
+    private ConcertSchedule concertSchedule;
 
     @BeforeEach
     void setUp() {
@@ -58,10 +58,10 @@ class ReserveSeatUseCaseTest {
             .id(seatId)
             .seatNumber(1)
             .status(Seat.SeatStatus.AVAILABLE)
-            .concertSchedule(concertSchedule) // ✅ 공통 스케줄 사용
+            .concertSchedule(concertSchedule)
             .build();
 
-        when(seatRepository.findById(seatId)).thenReturn(Optional.of(seat));
+        when(seatRepository.findByIdForUpdate(seatId)).thenReturn(Optional.of(seat));
         when(seatRepository.save(any(Seat.class))).thenReturn(seat);
         when(reservationRepository.save(any(Reservation.class)))
             .thenAnswer(invocation -> invocation.getArgument(0));
@@ -74,7 +74,8 @@ class ReserveSeatUseCaseTest {
         assertThat(result.getUserId()).isEqualTo(userId);
         assertThat(result.getStatus()).isEqualTo(Reservation.ReservationStatus.PENDING);
         assertThat(result.getExpiresAt()).isAfter(result.getReservedAt());
-        assertThat(result.getExpiresAt()).isBefore(result.getReservedAt().plusMinutes(6));
+        assertThat(result.getExpiresAt()).isBefore(result.getReservedAt().plusMinutes(6)); // 5분 내
+
         verify(seatRepository).save(any(Seat.class));
         verify(reservationRepository).save(any(Reservation.class));
     }
@@ -90,14 +91,33 @@ class ReserveSeatUseCaseTest {
             .id(seatId)
             .seatNumber(1)
             .status(Seat.SeatStatus.RESERVED)
-            .concertSchedule(concertSchedule) // ✅ 공통 스케줄 사용
+            .concertSchedule(concertSchedule)
             .build();
 
-        when(seatRepository.findById(seatId)).thenReturn(Optional.of(seat));
+        when(seatRepository.findByIdForUpdate(seatId)).thenReturn(Optional.of(seat));
 
         // when & then
         assertThatThrownBy(() -> reserveSeatUseCase.reserveSeat(seatId, userId))
             .isInstanceOf(IllegalStateException.class)
             .hasMessageContaining("이미 예약 중이거나 판매 완료된 좌석");
+
+        verify(seatRepository).findByIdForUpdate(seatId);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 좌석이면 예외가 발생한다")
+    void reserveSeat_seatNotFound() {
+        // given
+        UUID seatId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+
+        when(seatRepository.findByIdForUpdate(seatId)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> reserveSeatUseCase.reserveSeat(seatId, userId))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("존재하지 않는 좌석");
+
+        verify(seatRepository).findByIdForUpdate(seatId);
     }
 }

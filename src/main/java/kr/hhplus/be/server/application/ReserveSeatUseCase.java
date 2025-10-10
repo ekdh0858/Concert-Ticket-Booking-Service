@@ -21,18 +21,18 @@ public class ReserveSeatUseCase {
 
     @Transactional
     public Reservation reserveSeat(UUID seatId, UUID userId) {
-        Seat seat = seatRepository.findById(seatId)
+        Seat seat = seatRepository.findByIdForUpdate(seatId)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 좌석입니다."));
 
-        // 이미 예약된 좌석인지 확인
+        // 이미 예약된 좌석이면 예외 발생
         if (seat.getStatus() != Seat.SeatStatus.AVAILABLE) {
             throw new IllegalStateException("이미 예약 중이거나 판매 완료된 좌석입니다.");
         }
 
-        // 좌석 점유
         seat.reserve();
         seatRepository.save(seat);
 
+        // 예약 엔티티 생성
         LocalDateTime now = LocalDateTime.now();
         Reservation reservation = Reservation.builder()
             .seatId(seatId)

@@ -1,7 +1,10 @@
 package kr.hhplus.be.server.infrastructure.reservation;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import kr.hhplus.be.server.domain.Reservation;
 import kr.hhplus.be.server.domain.ReservationRepositoryPort;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +37,13 @@ public class ReservationRepositoryImpl implements ReservationRepositoryPort {
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
 
         reservation.updateStatus(ReservationEntity.ReservationStatus.CONFIRMED);
+    }
+
+    @Override
+    public List<Reservation> findAllExpired(LocalDateTime now) {
+        return jpaRepository.findAllExpired(now)
+            .stream()
+            .map(ReservationMapper::toDomain)
+            .collect(Collectors.toList());
     }
 }
